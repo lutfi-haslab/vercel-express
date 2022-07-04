@@ -13,4 +13,8 @@ app.get('/api/item/:slug', (req, res) => {
   res.end(`Item: ${slug}`);
 });
 
+const port = 3000;
+app.listen(port, () => {
+    console.log(`Listen to port ${port}`)
+})
 module.exports = app;
