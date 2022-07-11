@@ -1,20 +1,33 @@
-const app = require('express')();
-const { v4 } = require('uuid');
-
-app.get('/api', (req, res) => {
-  const path = `/api/item/${v4()}`;
-  res.setHeader('Content-Type', 'text/html');
-  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
-  res.end(`Hello! Go to item: <a href="${path}">${path}</a>`);
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const indexRouter = require('./router.js');
+ 
+const app = express();
+ 
+app.use(express.json());
+ 
+app.use(bodyParser.json());
+ 
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+ 
+app.use(cors());
+ 
+app.use('/api', indexRouter);
+ 
+// Handling Errors
+app.use((err, req, res, next) => {
+    // console.log(err);
+    err.statusCode = err.statusCode || 500;
+    err.message = err.message || "Internal Server Error";
+    res.status(err.statusCode).json({
+      message: err.message,
+    });
 });
-
-app.get('/api/item/:slug', (req, res) => {
-  const { slug } = req.params;
-  res.end(`Item: ${slug}`);
-});
-
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Listen to port ${port}`)
-})
+ 
+app.listen(3000,() => console.log('Server is running on port 3000'));
 module.exports = app;
