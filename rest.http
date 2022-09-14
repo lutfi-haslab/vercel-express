@@ -1,0 +1,7 @@
+@hostname = http://localhost:3030
+###
+GET {{hostname}}/api/todo/db/create
+###
+GET {{hostname}}/api/todo
+###
+POST {{hostname}}/api/todo
